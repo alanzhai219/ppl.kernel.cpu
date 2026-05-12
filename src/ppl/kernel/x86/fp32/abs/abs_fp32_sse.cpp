@@ -39,10 +39,10 @@ ppl::common::RetCode abs_fp32_sse(
         __m128 src1 = _mm_loadu_ps(x + i + 1 * V_REG_ELTS);
         __m128 src2 = _mm_loadu_ps(x + i + 2 * V_REG_ELTS);
         __m128 src3 = _mm_loadu_ps(x + i + 3 * V_REG_ELTS);
-        __m128 dst0 = _mm_andnot_ps(src0, vsignbit);
-        __m128 dst1 = _mm_andnot_ps(src1, vsignbit);
-        __m128 dst2 = _mm_andnot_ps(src2, vsignbit);
-        __m128 dst3 = _mm_andnot_ps(src3, vsignbit);
+        __m128 dst0 = _mm_andnot_ps(vsignbit, src0);
+        __m128 dst1 = _mm_andnot_ps(vsignbit, src1);
+        __m128 dst2 = _mm_andnot_ps(vsignbit, src2);
+        __m128 dst3 = _mm_andnot_ps(vsignbit, src3);
         _mm_storeu_ps(y + i + 0 * V_REG_ELTS, dst0);
         _mm_storeu_ps(y + i + 1 * V_REG_ELTS, dst1);
         _mm_storeu_ps(y + i + 2 * V_REG_ELTS, dst2);

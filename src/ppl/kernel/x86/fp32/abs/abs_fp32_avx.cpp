@@ -37,8 +37,8 @@ ppl::common::RetCode abs_fp32_avx(
     for (int64_t i = 0; i < unroll_body; i += unroll_n) {
         __m256 src0 = _mm256_loadu_ps(x + i + 0 * V_REG_ELTS);
         __m256 src1 = _mm256_loadu_ps(x + i + 1 * V_REG_ELTS);
-        __m256 dst0 = _mm256_andnot_ps(src0, vsignbit);
-        __m256 dst1 = _mm256_andnot_ps(src1, vsignbit);
+        __m256 dst0 = _mm256_andnot_ps(vsignbit, src0);
+        __m256 dst1 = _mm256_andnot_ps(vsignbit, src1);
         _mm256_storeu_ps(y + i + 0 * V_REG_ELTS, dst0);
         _mm256_storeu_ps(y + i + 1 * V_REG_ELTS, dst1);
     }

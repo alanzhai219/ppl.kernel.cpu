@@ -113,32 +113,27 @@ endif()
 if(PPLNN_BUILD_TESTS)
     set(__PPLNN_TOOLS_DIR__ ${CMAKE_CURRENT_SOURCE_DIR}/test)
 
-    add_executable(test_conv2d test/test_conv2d.cpp ${__PPLNN_TOOLS_DIR__}/simple_flags.cc)
-    target_include_directories(test_conv2d
-        PUBLIC ${PPLKERNELX86_PUBLIC_INCLUDE_DIRECTORIES}
-        PRIVATE ${PPLKERNELX86_PRIVATE_INCLUDE_DIRECTORIES} ${__PPLNN_TOOLS_DIR__} ${PPLCOMMON_INCLUDES})
-    target_compile_options(test_conv2d PRIVATE ${PPLKERNELX86_COMPILE_OPTIONS})
-    target_compile_definitions(test_conv2d PRIVATE ${PPLKERNELX86_COMPILE_DEFINITIONS})
-    target_compile_features(test_conv2d PRIVATE cxx_std_11)
-    target_link_libraries(test_conv2d PRIVATE pplkernelx86_static ${PPLKERNELX86_LINK_LIBRARIES})
+    function(pplkernelx86_add_test target_name)
+        add_executable(${target_name} test/${target_name}.cpp ${__PPLNN_TOOLS_DIR__}/simple_flags.cc)
+        target_include_directories(${target_name}
+            PUBLIC ${PPLKERNELX86_PUBLIC_INCLUDE_DIRECTORIES}
+            PRIVATE ${PPLKERNELX86_PRIVATE_INCLUDE_DIRECTORIES} ${__PPLNN_TOOLS_DIR__} ${PPLCOMMON_INCLUDES})
+        target_compile_options(${target_name} PRIVATE ${PPLKERNELX86_COMPILE_OPTIONS})
+        target_compile_definitions(${target_name} PRIVATE ${PPLKERNELX86_COMPILE_DEFINITIONS})
+        target_compile_features(${target_name} PRIVATE cxx_std_11)
+        target_link_libraries(${target_name} PRIVATE pplkernelx86_static ${PPLKERNELX86_LINK_LIBRARIES})
+    endfunction()
 
-    add_executable(test_gemm test/test_gemm.cpp ${__PPLNN_TOOLS_DIR__}/simple_flags.cc)
-    target_include_directories(test_gemm
-        PUBLIC ${PPLKERNELX86_PUBLIC_INCLUDE_DIRECTORIES} ${PPLKERNELX86_INCLUDE_DIRECTORIES}
-        PRIVATE ${PPLKERNELX86_PRIVATE_INCLUDE_DIRECTORIES} ${__PPLNN_TOOLS_DIR__} ${PPLCOMMON_INCLUDES})
-    target_compile_options(test_gemm PRIVATE ${PPLKERNELX86_COMPILE_OPTIONS})
-    target_compile_definitions(test_gemm PRIVATE ${PPLKERNELX86_COMPILE_DEFINITIONS})
-    target_compile_features(test_gemm PRIVATE cxx_std_11)
-    target_link_libraries(test_gemm PRIVATE pplkernelx86_static ${PPLKERNELX86_LINK_LIBRARIES})
+    set(PPLKERNELX86_TESTS)
+    list(APPEND PPLKERNELX86_TESTS
+        test_abs
+        test_conv2d
+        test_gemm
+        test_pd_conv2d)
 
-    add_executable(test_pd_conv2d test/test_pd_conv2d.cpp ${__PPLNN_TOOLS_DIR__}/simple_flags.cc)
-    target_include_directories(test_pd_conv2d
-        PUBLIC ${PPLKERNELX86_PUBLIC_INCLUDE_DIRECTORIES} ${PPLKERNELX86_INCLUDE_DIRECTORIES}
-        PRIVATE ${PPLKERNELX86_PRIVATE_INCLUDE_DIRECTORIES} ${__PPLNN_TOOLS_DIR__} ${PPLCOMMON_INCLUDES})
-    target_compile_options(test_pd_conv2d PRIVATE ${PPLKERNELX86_COMPILE_OPTIONS})
-    target_compile_definitions(test_pd_conv2d PRIVATE ${PPLKERNELX86_COMPILE_DEFINITIONS})
-    target_compile_features(test_pd_conv2d PRIVATE cxx_std_11)
-    target_link_libraries(test_pd_conv2d PRIVATE pplkernelx86_static ${PPLKERNELX86_LINK_LIBRARIES})
+    foreach(test_name IN LISTS PPLKERNELX86_TESTS)
+        pplkernelx86_add_test(${test_name})
+    endforeach()
 
     unset(__PPLNN_TOOLS_DIR__)
 endif()

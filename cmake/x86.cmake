@@ -129,6 +129,8 @@ if(PPLNN_BUILD_TESTS)
         test_abs
         test_conv2d
         test_gemm
+        test_maxpool_n16cx
+        test_reorder_ndarray_n16cx
         test_pd_conv2d)
 
     foreach(test_name IN LISTS PPLKERNELX86_TESTS)
